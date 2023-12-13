@@ -1,0 +1,82 @@
+<div class="mt-4 mb-4 container-title-category">
+  <h2> Billeteras </h2> 
+  <button class="btn btn-info ms-3 btn-category" (click)="AddModalWallet()"> Nueva billetera 
+    <i class="fas fa-plus-circle"></i> 
+  </button>
+</div>
+
+<div class="mb-4 box-amount" *ngIf="wallets.length > 0">
+  <span style="font-size: 1.5rem;"> Total: S/ {{ totalAmount | number:'1.2-2' }} </span>
+</div>
+
+
+
+<table class="table" *ngIf="wallets.length > 0">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Monto inicial</th>
+      <th scope="col">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of wallets; index as indice" style="vertical-align: middle;">
+      <td scope="row">{{indice +1}}</td>
+      <td>{{item.name}}</td>
+      <td> S/ {{ item.amount | number:'1.2-2' }}</td>
+      <td> 
+        <button class="btn btn-primary btn-sm" (click)="EdditModalWallet(item)"><i class="fas fa-pencil-alt"></i></button>
+        <button class="btn btn-danger btn-sm ms-2" (click)="deleteWallet(item.id)"><i class="far fa-trash-alt"></i></button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="wallets.length == 0" class="alert alert-info" role="alert">
+  No existen registros todavia. <i class="fas fa-info-circle"></i>
+</div>
+
+<div class="modal fade" id="exampleModalWallet" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel"> {{title ? 'Nueva billetera' : 'Actualizar billetera'}} </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" 
+     aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+     
+      <div>
+        <form [formGroup]="formGroup">
+          <div class="container">
+           
+            <div class="row col-12 text-center mt-4">
+              <div class="col-4 align-self-start">
+                <label class="col-form-label label-black"> Nombre </label>
+              </div>
+              <div class="col-8">
+                <input type="text" class="form-control" formControlName="name" (input)="onlyLetters($event.target)">
+              </div>
+            </div>
+            <div class="row col-12 text-center mt-4">
+              <div class="col-4 align-self-start">
+                <label class="col-form-label label-black"> Monto </label>
+              </div>
+              <div class="col-8">
+                <input type="text" class="form-control" formControlName="amount" (input)="onlyNumbers($event.target)">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary btn-register-category" [disabled]="!formGroup.valid" (click)="save()"> {{title ? 'Registrar' : 'Actualizar'}} </button>
+
+    </div>
+  </div>
+</div>
+</div>

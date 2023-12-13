@@ -1,0 +1,116 @@
+<div class="mt-4 mb-4 container-title-category">
+  <h2> Movimientos </h2> 
+  <button class="btn btn-info ms-3 btn-category" (click)="AddModalTransaction()"> Nuevo movimiento 
+    <i class="fas fa-plus-circle"></i> 
+  </button>
+</div>
+
+<div class="mb-4 box-amount" *ngIf="wallets.length > 0">
+  <span style="font-size: 1.5rem;"> Total: S/ {{ totalAmount | number:'1.2-2' }} </span>
+</div>
+
+<table mat-table [dataSource]="transactions" matSort>
+
+  <ng-container matColumnDef="monto">
+    <th mat-header-cell *matHeaderCellDef> Monto </th>
+    <td mat-cell *matCellDef="let element"> S/ {{element.amount | number:'1.2-2' }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="fecha">
+    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+    <td mat-cell *matCellDef="let element"> {{element.date | date:"dd/MM/yyyy"}} </td>
+  </ng-container>
+
+   <ng-container matColumnDef="tipo">
+    <th mat-header-cell *matHeaderCellDef> Tipo </th>
+    <td mat-cell *matCellDef="let element"> {{element.category.type}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef class="mat-app-header-cell text-basic-header"> Acciones </th>
+    <td mat-cell *matCellDef="let element" class="mat-app-data-cell-centered" >
+      <span style="vertical-align: middle;">&nbsp;
+        <button class="btn btn-primary btn-sm" (click)="EdditModalTransaction(element)"><i class="fas fa-pencil-alt"></i></button>
+        <button class="btn btn-danger btn-sm ms-2" (click)="deleteTransaction(element.id)"><i class="far fa-trash-alt"></i></button>
+      </span>
+    </td>
+</ng-container> 
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator 
+[length]="total"
+[pageSize]="pageSize"
+[pageSizeOptions]="[5, 10, 15]"
+aria-label="Seleccione una pagina de billeteras"
+>
+</mat-paginator>
+
+
+<div *ngIf="transactions.length == 0" class="alert alert-info" role="alert">
+  No existen registros todavia. <i class="fas fa-info-circle"></i>
+</div>
+
+<div class="modal fade" id="exampleModalTransaction" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel"> {{title ? 'Nuevo movimiento' : 'Actualizar movimiento'}} </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" 
+     aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+     
+      <div>
+        <form [formGroup]="formGroup">
+          <div class="container">
+
+            <div class="row mt-2">
+              <div class="col-6">
+                <label for="exampleInputEmail1" class="form-label"> Monto </label>
+                <input type="email" class="form-control" formControlName="amount" autocomplete="off" (input)="onlyNumbers($event.target)">
+              </div>
+              <div class="col-6">
+                <label for="exampleInputEmail1" class="form-label"> Categoria </label>
+                <select class="form-select" formControlName="category">
+                  <option *ngFor="let item of categories" [value]="item.id"> {{item.name}} </option>
+                </select>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-6">
+                <label for="exampleInputEmail1" class="form-label"> Fecha </label>
+                <input type="date" class="form-control" formControlName="date" autocomplete="off">
+              </div>
+
+              <div class="col-6">
+                <label for="exampleInputEmail1" class="form-label"> Billetera </label>
+                <select class="form-select" formControlName="wallet">
+                  <option *ngFor="let item of wallets" [value]="item.id"> {{item.name}} </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-12">
+                <label for="exampleInputEmail1" class="form-label"> Nota </label>
+                <textarea name="" id="" cols="30" rows="10" class="form-control" formControlName="note" style="resize: none; height: 150px;"></textarea>
+              </div>
+            </div>
+           
+           
+          </div>
+        </form>
+      </div>
+
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary btn-register-category" [disabled]="!formGroup.valid" (click)="save()"> {{title ? 'Registrar' : 'Actualizar'}} </button>
+
+    </div>
+  </div>
+</div>
+</div>

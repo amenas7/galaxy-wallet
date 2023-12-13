@@ -1,0 +1,33 @@
+
+<div class="bg-all">
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+          <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="card shadow">
+              <div class="card-title text-center border-bottom">
+                <h2 class="p-3" style="color: #666;">Acceso a la plataforma</h2>
+              </div>
+              <div class="card-body">
+                <form [formGroup]="form" (ngSubmit)="signIn()">
+                  <div class="mb-4">
+                    <label for="username" class="form-label">Email</label>
+                    <input type="text" class="form-control" autocomplete="off" formControlName="email">
+                  </div>
+                  <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <input [type]="showPassword ? 'text' : 'password' "
+                    formControlName="password" class="form-control" autocomplete="off">
+                  </div>
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Ingresar</button>
+                  </div>
+                  <div class="d-grid mt-4">
+                    <button type="button" class="btn btn-info" (click)="goSignUp()">Nuevo usuario</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>

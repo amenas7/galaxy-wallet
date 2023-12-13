@@ -1,0 +1,27 @@
+.bg-all{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #2396F2;
+}
+
+
+:root{
+    background:#e91e63 !important ;
+  }
+  
+  .main-bg {
+    background: #e91e63 !important;
+  }
+  
+  input:focus, button:focus {
+    box-shadow: none !important;
+  }
+  
+   
+  .card, .btn, input{
+    border-radius:0 !important;
+  }
+  

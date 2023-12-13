@@ -1,0 +1,35 @@
+:host {
+    display: block;
+}
+
+.btn-category{
+  color: white; 
+  background-color: #284FAE; 
+  border: none;
+}
+
+.btn-category:active{
+  color: white; 
+  background-color: #284FAE; 
+  border: none;
+}
+
+.container-title-category{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn-register-category{
+  background-color: #284FAE; 
+  border: none;
+}
+
+.box-amount{
+  border: 2px solid #284FAE;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 10px 20px;
+  color: #284FAE;
+  font-weight: bold;
+}
