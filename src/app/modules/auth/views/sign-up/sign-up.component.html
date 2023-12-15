@@ -23,8 +23,31 @@
                     <input [type]="showPassword ? 'text' : 'password' "
                     formControlName="password_repeat" class="form-control" autocomplete="off">
                   </div>
+
+                  <ng-container *ngIf="form.controls.password.dirty">
+                    <app-error-message
+                      [control]="form.controls.password"
+                    ></app-error-message>
+                    <div class="invalid-feedback" style="color: red;">Las contraseñas no coinciden.</div>
+                    <div *ngIf="form.controls.password.pending">Validando password</div>
+                  </ng-container>
+
+                  <!-- <span *ngIf="f.password.errors && f.password.touched"> 
+                    <div *ngIf="f.password.errors.required">
+                      <span style="color: red;"> Las contraseñas no coinciden </span>
+                    </div>
+                  </span> -->
+
+
+
+                  <div class="alert alert-danger" *ngIf="form.hasError('passwordMismatch')">
+                    Las contraseñas no coinciden.
+                  </div>
+
+                  
+          
                   <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">Registrar</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Registrar</button>
                   </div>
                   <div class="d-grid mt-4">
                     <button type="button" class="btn btn-info" (click)="goSignIn()"> Volver a inicio de sesión</button>

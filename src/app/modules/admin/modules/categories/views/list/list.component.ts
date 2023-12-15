@@ -64,35 +64,30 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.categoriesHttp.getAll().subscribe(categories => this.categories = categories);
   }
 
-  AddModalCategory(){
-    this.title = true;
+  resetModal(){
+    this.title = false;
     this.formGroup.reset();
     this.formModalNew.show();
+  }
+
+  AddModalCategory(){
+    this.resetModal();
 
     //seteando objeto
     this.category = { id : 0, name: '', type: '', userId: 0};
   }
 
   EdditModalCategory(item: CategoryModel){
-    this.title = false;
-    this.formGroup.reset();
-    this.formModalNew.show();
+    this.resetModal();
 
     this.categoriesHttp.getOne(item.id).subscribe({
       next: (data) => {
 
-        const {
-          id,
-          name,
-          type,
-          userId
-        } = item;
-
-        this.category = { id , name, type, userId };
+        this.category = { ...item };
 
         this.formGroup.patchValue({
-          name,
-          type
+          name: item.name,
+          type: item.type
         });
 
       },

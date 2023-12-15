@@ -34,7 +34,7 @@ export default class SignUpComponent {
   private toastr = inject(ToastrService);
 
   showPassword = false;
-
+  mostrarError: boolean = false;
   
 
   form: FormGroup<{
@@ -48,11 +48,27 @@ export default class SignUpComponent {
       email: [environment.auth.email, [Validators.required, AppValidators.email]],
       password: [environment.auth.password, Validators.required],
       password_repeat: [null, Validators.required],
-    });
+    }, { validators: this.passwordMatchValidator }
+    );
   }
 
   goSignIn(){
     this.router.navigateByUrl('/auth/sign-in');
+  }
+
+  get f(){
+    return this.form.controls;
+  }
+
+  passwordMatchValidator(group: FormGroup) {
+    const password = group.get('password')!.value;
+    const confirmPassword = group.get('password_repeat')!.value;
+
+    if (password === confirmPassword) {
+      return null;
+    } else {
+      return { passwordMismatch: true };
+    }
   }
 
   validateEqualsPassword(): boolean{
@@ -67,12 +83,14 @@ export default class SignUpComponent {
   }
 
   signUp() {
-    if (this.form.invalid) return;
-
-    if(!this.validateEqualsPassword()) {
-        this.toastr.error('Passwords must be the same');
-      return
+    if (this.form.invalid) {
+      this.mostrarError = true; return
     };
+
+    // if(!this.validateEqualsPassword()) {
+    //     this.toastr.error('Passwords must be the same');
+    //   return
+    // };
     // TODO: refactorizar el tipado del response
     this.authHttp.SignUp(
       {

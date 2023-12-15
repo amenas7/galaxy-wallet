@@ -49,6 +49,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   optionsFilter: any[] = [];
   displayedColumns: string[] = [
     "monto",
+    "billetera",
     "fecha",
     "tipo",
     "acciones",
@@ -76,6 +77,9 @@ export class ListComponent implements OnInit, AfterViewInit {
     //pageSize: FormControl;
   }>;
 
+  filterForm: FormGroup;
+  _wallet_filter: number = 0;
+
   constructor() {
     this.formGroup = this.fb.group({
       amount: [null, [Validators.required]],
@@ -83,7 +87,11 @@ export class ListComponent implements OnInit, AfterViewInit {
       date: [null, [Validators.required]],
       wallet: [null, [Validators.required]],
       note: [null, [Validators.required]],
-    });   
+    });  
+    
+    this.filterForm = this.fb.group({
+      wallet_filter: [''],
+    });
 
   }
 
@@ -99,9 +107,23 @@ export class ListComponent implements OnInit, AfterViewInit {
 
     
   }
+
+  filter() {
+    this._wallet_filter = this.filterForm.get('wallet_filter')?.value;
+    if (this._wallet_filter) {
+      this.load(this._wallet_filter)
+    } else {
+      this.load();
+    }
+  }
+
+  resetPaginate(){
+    this._wallet_filter = 0;
+    this.load();
+  }
   
 
-  load() {
+  load(_wallet_filter?: number) {
 
     this.paginator.page
       .asObservable()
@@ -110,7 +132,8 @@ export class ListComponent implements OnInit, AfterViewInit {
         switchMap(() =>
           this.transactionsHttp.getAll(
             this.paginator.pageSize,
-            this.paginator.pageIndex
+            this.paginator.pageIndex,
+            this._wallet_filter
           )
         )
       )
@@ -131,47 +154,37 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   }
 
-  
+  resetModal(){
+    this.title = false;
+    this.formGroup.reset();
+    this.formModalNew.show();
+  }
 
 
   AddModalTransaction(){
-    this.title = true;
-    this.formGroup.reset();
-    this.formModalNew.show();
+    this.resetModal();
 
     //seteando objeto
     this.transaction = { id : 0, amount: 0, note: '', date: new Date(), category: null };
   }
 
   EdditModalTransaction(item: TransactionModel){
-    this.title = false;
-    this.formGroup.reset();
-    this.formModalNew.show();
+    this.resetModal();
 
     this.transactionsHttp.getOne(item.id).subscribe({
       next: (data) => {
 
-        console.log("servicio...", data);
+        this.transaction = { ...item };
 
-        const {
-          id,
-          amount,
-          category,
-          date,
-          wallet,
-          note
-        } = item;
-
-        this.transaction = { id , amount, category, date, wallet, note };
-
-        const formattedDate = new Date(date).toISOString().split('T')[0];
+        //parseando la fecha
+        const formattedDate = new Date(item.date).toISOString().split('T')[0];
 
         this.formGroup.patchValue({
-          amount,
-          category: category.id,
+          amount: item.amount,
+          category: item.category.id,
           date: formattedDate,
-          wallet: wallet.id,
-          note
+          wallet: item.wallet.id,
+          note: item.note
         });
 
       },

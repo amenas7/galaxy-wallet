@@ -29,17 +29,20 @@ export class TransactionHttp {
       )
   }
 
-  getAll(pageSize: number, page: number): Observable<any[]> {
+  getAll(pageSize: number, page: number, _wallet_filter: number): Observable<any[]> {
     let headers = new HttpHeaders({
        Authorization: `Bearer ${this.session.accessToken?.jwt}`,
     });
 
+    console.log("servicio...", _wallet_filter);
+
     const params = new HttpParams({
       fromObject: {
         pageSize,
-        page
+        page,
+        walletId:_wallet_filter
       }
-    })
+    });
 
     return this.http.get<any[]>(this.endpoint, { params })
       .pipe(

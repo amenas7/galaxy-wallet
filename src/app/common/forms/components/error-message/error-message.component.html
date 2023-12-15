@@ -19,3 +19,6 @@
     {{ control.getError("range").min }} y el maximo valor aceptable es
     {{ control.getError("range").max }}
   </ng-container>
+  <ng-container *ngIf="control.hasError('passwordMismatch')">
+    ERROR....
+  </ng-container>

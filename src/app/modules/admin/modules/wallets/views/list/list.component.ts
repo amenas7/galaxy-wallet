@@ -65,34 +65,29 @@ export class ListComponent implements OnInit, AfterViewInit {
   }
 
   AddModalWallet(){
-    this.title = true;
-    this.formGroup.reset();
-    this.formModalNew.show();
+    this.resetModal();
 
     //seteando objeto
     this.wallet = { id : 0, name: '', amount: 0, userId: 0};
   }
 
-  EdditModalWallet(item: WalletModel){
+  resetModal(){
     this.title = false;
     this.formGroup.reset();
     this.formModalNew.show();
+  }
+
+  EdditModalWallet(item: WalletModel){
+    this.resetModal();
 
     this.walletsHttp.getOne(item.id).subscribe({
       next: (data) => {
 
-        const {
-          id,
-          name,
-          amount,
-          userId
-        } = item;
-
-        this.wallet = { id , name, amount, userId };
+        this.wallet = { ...item };
 
         this.formGroup.patchValue({
-          name,
-          amount
+          name: item.name,
+          amount: item.amount
         });
 
       },
